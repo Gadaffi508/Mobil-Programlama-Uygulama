@@ -1,44 +1,53 @@
 // notes_screen.dart
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../app_state.dart';
+
+import 'package:flutter/material.dart'; // Material tasarım bileşenleri ve widget'ları içerir.
+import 'package:provider/provider.dart'; // State yönetimi için Provider kütüphanesini kullanır.
+import '../app_state.dart'; // Uygulama durumunu yöneten AppState sınıfını içe aktarır.
 
 class NotesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notlar'),
+        // Ekranın üst kısmındaki uygulama çubuğu.
+        title: Text('Notlar'), // Çubuğun başlığı.
       ),
       body: Consumer<AppState>(
+        // Uygulama durumunu dinleyen bir Consumer widget'ı.
         builder: (context, appState, child) {
           return Column(
+            // Notlar ve "Not Ekle" butonunu içeren bir sütun.
             children: [
               Expanded(
+                // Notları listeleyen bir ListView widget'ını genişletir.
                 child: ListView.builder(
-                  itemCount: appState.notes.length,
+                  itemCount: appState.notes.length, // Not sayısına göre liste uzunluğu.
                   itemBuilder: (context, index) => ListTile(
-                    title: Text(appState.notes[index]),
+                    title: Text(appState.notes[index]), // Notun metni.
                     trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => appState.removeNote(index),
+                      icon: Icon(Icons.delete, color: Colors.red), // Silme simgesi.
+                      onPressed: () => appState.removeNote(index), // Notu siler.
                     ),
                   ),
                 ),
               ),
               Padding(
+                // "Not Ekle" butonuna padding ekler.
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
+                  // Yeni bir not eklemek için kullanılan buton.
                   onPressed: () async {
+                    // Kullanıcıdan not almak için bir diyalog açar.
                     final note = await showDialog<String>(
                       context: context,
-                      builder: (context) => _NoteInputDialog(),
+                      builder: (context) => _NoteInputDialog(), // Not giriş diyalogu.
                     );
                     if (note != null && note.isNotEmpty) {
-                      appState.addNote(note);
+                      // Eğer kullanıcı bir not girmişse.
+                      appState.addNote(note); // Notu ekler.
                     }
                   },
-                  child: Text('Not Ekle'),
+                  child: Text('Not Ekle'), // Buton metni.
                 ),
               ),
             ],
@@ -49,25 +58,30 @@ class NotesScreen extends StatelessWidget {
   }
 }
 
+// Kullanıcıdan not almak için kullanılan özel bir diyalog sınıfı.
 class _NoteInputDialog extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController(); // Kullanıcının girdiğini almak için bir TextEditingController.
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Yeni Not'),
+      // Girdi almak için bir diyalog kutusu.
+      title: Text('Yeni Not'), // Diyalog başlığı.
       content: TextField(
-        controller: _controller,
-        decoration: InputDecoration(hintText: 'Not'),
+        // Kullanıcıdan metin girişi almak için bir TextField.
+        controller: _controller, // Giriş kontrolcüsü.
+        decoration: InputDecoration(hintText: 'Not'), // Giriş için ipucu metni.
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('İptal'),
+          // İptal butonu.
+          onPressed: () => Navigator.pop(context), // Diyalogdan çıkış yapar.
+          child: Text('İptal'), // Buton metni.
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context, _controller.text),
-          child: Text('Ekle'),
+          // Ekle butonu.
+          onPressed: () => Navigator.pop(context, _controller.text), // Girilen notu diyaloğu kapatarak döner.
+          child: Text('Ekle'), // Buton metni.
         ),
       ],
     );

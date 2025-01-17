@@ -1,55 +1,65 @@
 // task_list_screen.dart
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../app_state.dart';
+
+import 'package:flutter/material.dart'; // Material tasarım bileşenleri ve widget'ları içerir.
+import 'package:provider/provider.dart'; // State yönetimi için Provider kütüphanesini kullanır.
+import '../app_state.dart'; // Uygulama durumunu yöneten AppState sınıfını içe aktarır.
 
 class TaskListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Görevler'),
+        // Ekranın üst kısmındaki çubuk.
+        title: Text('Görevler'), // Çubuğun başlığı.
       ),
       body: Consumer<AppState>(
+        // Uygulama durumunu dinleyen bir Consumer widget'ı.
         builder: (context, appState, child) {
           return Column(
+            // Görevler listesi ve "Görev Ekle" butonunu içeren bir sütun.
             children: [
               Expanded(
+                // Görevleri listeleyen bir ListView widget'ını genişletir.
                 child: ListView.builder(
-                  itemCount: appState.tasks.length,
+                  itemCount: appState.tasks.length, // Görev sayısına göre liste uzunluğu.
                   itemBuilder: (context, index) => ListTile(
                     title: Text(
-                      appState.tasks[index]['task'],
+                      appState.tasks[index]['task'], // Görev metni.
                       style: TextStyle(
                         decoration: appState.tasks[index]['isCompleted']
-                            ? TextDecoration.lineThrough
+                            ? TextDecoration.lineThrough // Tamamlanmış görev için üstü çizili metin.
                             : null,
                       ),
                     ),
                     leading: Checkbox(
-                      value: appState.tasks[index]['isCompleted'],
-                      onChanged: (value) => appState.toggleTaskCompletion(index),
+                      // Görev tamamlama durumunu göstermek için bir Checkbox.
+                      value: appState.tasks[index]['isCompleted'], // Görev tamamlanma durumu.
+                      onChanged: (value) => appState.toggleTaskCompletion(index), // Durumu değiştirir.
                     ),
                     trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => appState.removeTask(index),
+                      icon: Icon(Icons.delete, color: Colors.red), // Silme simgesi.
+                      onPressed: () => appState.removeTask(index), // Görevi siler.
                     ),
                   ),
                 ),
               ),
               Padding(
+                // "Görev Ekle" butonuna padding ekler.
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
+                  // Yeni bir görev eklemek için kullanılan buton.
                   onPressed: () async {
                     final task = await showDialog<String>(
+                      // Kullanıcıdan görev adı girişi almak için bir diyalog açar.
                       context: context,
-                      builder: (context) => _TaskInputDialog(),
+                      builder: (context) => _TaskInputDialog(), // Görev giriş diyalogu.
                     );
                     if (task != null && task.isNotEmpty) {
-                      appState.addTask(task);
+                      // Eğer kullanıcı bir görev girmişse.
+                      appState.addTask(task); // Görevi ekler.
                     }
                   },
-                  child: Text('Görev Ekle'),
+                  child: Text('Görev Ekle'), // Buton metni.
                 ),
               ),
             ],
@@ -60,25 +70,30 @@ class TaskListScreen extends StatelessWidget {
   }
 }
 
+// Görev girişi almak için kullanılan özel bir diyalog sınıfı.
 class _TaskInputDialog extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController(); // Kullanıcının girişini kontrol eder.
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Yeni Görev'),
+      // Görev girişi için bir diyalog kutusu.
+      title: Text('Yeni Görev'), // Diyalog başlığı.
       content: TextField(
-        controller: _controller,
-        decoration: InputDecoration(hintText: 'Görev adı'),
+        // Kullanıcıdan metin girişi almak için bir TextField.
+        controller: _controller, // Giriş kontrolcüsü.
+        decoration: InputDecoration(hintText: 'Görev adı'), // Giriş için ipucu metni.
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('İptal'),
+          // İptal butonu.
+          onPressed: () => Navigator.pop(context), // Diyalogdan çıkış yapar.
+          child: Text('İptal'), // Buton metni.
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context, _controller.text),
-          child: Text('Ekle'),
+          // Ekle butonu.
+          onPressed: () => Navigator.pop(context, _controller.text), // Girilen metni diyaloğu kapatarak döner.
+          child: Text('Ekle'), // Buton metni.
         ),
       ],
     );
