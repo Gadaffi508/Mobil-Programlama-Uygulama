@@ -61,6 +61,19 @@ class HomeScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => WeatherScreen()),
               ),
+            ),ListTile(
+              leading: Icon(Icons.brightness_6),
+              title: Text('Tema Değiştir'),
+              trailing: Consumer<AppState>(
+                builder: (context, appState, child) {
+                  return Switch(
+                    value: appState.themeMode == ThemeMode.dark,
+                    onChanged: (value) {
+                      appState.toggleTheme();
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),

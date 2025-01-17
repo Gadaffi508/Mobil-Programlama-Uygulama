@@ -16,13 +16,17 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Kişisel Asistan',
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.system,
-      home: HomeScreen(),
+    return Consumer<AppState>(
+      builder: (context, appState, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Kişisel Asistan',
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+          themeMode: appState.themeMode,
+          home: HomeScreen(),
+        );
+      },
     );
   }
 }

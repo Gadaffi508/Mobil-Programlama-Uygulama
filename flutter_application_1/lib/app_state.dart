@@ -4,6 +4,14 @@ class AppState extends ChangeNotifier {
   List<Map<String, dynamic>> tasks = [];
   List<String> notes = [];
   List<Map<String, dynamic>> reminders = [];
+  ThemeMode _themeMode = ThemeMode.system;
+
+  ThemeMode get themeMode => _themeMode;
+
+  void toggleTheme() {
+    _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
+  }
 
   void addTask(String task) {
     tasks.add({'task': task, 'isCompleted': false});
